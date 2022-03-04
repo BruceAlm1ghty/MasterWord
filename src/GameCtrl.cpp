@@ -74,24 +74,21 @@ bool GameCtrl::Create(wxWindow *parent, wxWindowID winid, const wxPoint& pos, co
 	return true;
 }
 
+#include <wx/richmsgdlg.h>
+
 void GameCtrl::OnDone(const std::string& szCap, const std::string& szMesg) {
-	wxMessageDialog dlg(this, szMesg + "New Game?", szCap, wxYES_NO | wxCANCEL);
-	dlg.SetYesNoCancelLabels("Yes", "No", "Exclude");
-	switch(dlg.ShowModal()) {
-	case wxID_CANCEL:
+	wxRichMessageDialog dlg(this, szMesg + "New Game?", szCap, wxYES_NO);
+	dlg.ShowCheckBox("Remove " + m_Game.Word() + " from the dictionary");
+	if(wxID_YES == dlg.ShowModal()) {
+		m_Game.Random();
+		m_szGuess.clear();
+		Update();
+	}
+	if(dlg.IsCheckBoxChecked())
 		if(m_Game.Remove(m_Game.Word())) {
 			wxBusyCursor bc;
 			m_Game.SaveWords(m_szPath.c_str());
 		}
-		// fall through
-	case wxID_YES:
-		m_Game.Random();
-		m_szGuess.clear();
-		Update();
-		break;
-//	case wxID_NO:
-//		break;
-	}
 }
 
 void GameCtrl::OnWin() {

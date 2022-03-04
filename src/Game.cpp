@@ -6,7 +6,6 @@
 #include <filesystem>
 #include <fstream>
 #include <random>
-#include <valarray>
 
 namespace fs = std::experimental::filesystem;
 
@@ -52,6 +51,11 @@ bool Game::Random(std::size_t nLen) {
 	return Init(i->second[uniform_dist(sm_Rand) - 1], false);
 }
 
+bool Game::Init(std::string sz) { 
+	for(auto& x : sz) x &= ~32;
+	return Init(sz, true); 
+}
+
 bool Game::Init(const std::string& sz, bool bCheck) {
 	if(bCheck) {
 		auto& v = Words(sz.length());
@@ -77,15 +81,15 @@ Game::result_type Game::Guess(std::string sz) {
 	// our results vector for this guess
 	std::vector<std::uint8_t> ev(nLen, NOT);
 	// track the letters we've used
-	std::valarray<bool> vAvail(true, nLen);
+	std::uint32_t vUsed = 0;
 	// first pass check for correct
 	std::size_t nRight = 0;
-	for(std::size_t j = 0; j < nLen; ++j)
+	for(std::size_t j = 0, msk = 1; j < nLen; ++j, msk <<= 1)
 		if(sz[j] == m_szWord[j]) {
 			++nRight;
 			ev[j] = RIGHT;
 			// flag it used
-			vAvail[j] = false;
+			vUsed |= msk;
 			// update the state vector
 			m_vState[sz[j] - 'A'] = RIGHT;
 		}
@@ -93,11 +97,11 @@ Game::result_type Game::Guess(std::string sz) {
 	for(std::size_t j = 0; j < nLen; ++j)
 		if(ev[j] != RIGHT)
 			// check the current guess letter against every available letter in the word
-			for(std::size_t k = 0; k < nLen; ++k)
-				if(vAvail[k] && sz[j] == m_szWord[k]) {
+			for(std::size_t k = 0, msk = 1; k < nLen; ++k, msk <<= 1)
+				if(!(vUsed & msk) && sz[j] == m_szWord[k]) {
 					ev[j] = BELONG;
 					// flag it used
-					vAvail[k] = false;
+					vUsed |= msk;
 					// update the state vector
 					auto& s = m_vState[sz[j] - 'A'];
 					// don't downgrade from RIGHT

@@ -34,6 +34,7 @@ struct GameCtrl : public wxWindow {
 
 	void Random(std::size_t nLen = 5) { Random(nLen, m_nMaxGuesses); }
 	void Random(std::size_t nLen, std::size_t nMaxGuesses);
+	bool Init(const std::string& sz) { return m_Game.Init(sz); }
 
 	std::size_t Length() const { return m_Game.Length(); }
 

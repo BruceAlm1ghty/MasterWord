@@ -5,7 +5,7 @@ public:
 	typedef Frame this_type;
 	typedef wxFrame base_type;
 
-	enum { ID_NEW, ID_LEN, ID_MAX };
+	enum { ID_NEW, ID_LEN, ID_MAX, ID_WORD };
 public:
 	Frame();
 

@@ -33,7 +33,7 @@ struct Game {
 	//! initialize a game
 	bool Random(std::size_t nLen = 5);
 	//! initialize a new game using the given word
-	bool Init(const std::string& sz) { return Init(sz, true); }
+	bool Init(std::string sz);
 
 	//! evaluate a guess
 	//! return true if it's a win
