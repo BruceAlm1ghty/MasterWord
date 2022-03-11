@@ -7,6 +7,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <mutex>
 
 #include "wx/filedlg.h"
 #include <wx/filename.h>
@@ -31,9 +32,17 @@ const wxColour GameCtrl::sm_DefColors[CLR_MAX] {
 void GameCtrl::Random(std::size_t nLen, std::size_t nMaxGuesses) {
 	if(m_Game.Random(nLen)) {
 		m_nMaxGuesses = nMaxGuesses;
+		m_szGuess.clear();
 		Update();
 	} else
 		wxMessageBox("Could not initialize game with word length " + std::to_string(nLen));
+}
+
+bool GameCtrl::Init(const std::string& sz) {
+	m_Game.Init(sz);
+	m_szGuess.clear();
+	Update();
+	return true;
 }
 
 bool GameCtrl::LoadWords() {
@@ -41,8 +50,7 @@ bool GameCtrl::LoadWords() {
 	return sz.empty() ? false : m_Game.LoadWords((m_szPath = sz.ToStdString()).c_str());
 }
 
-GameCtrl::GameCtrl(wxWindow *parent, wxWindowID winid, const wxPoint& pos, const wxSize& size, long style, const wxString& name) : m_pFont(nullptr), m_nMaxGuesses(6) {
-	Create(parent, winid, pos, size, style, name);
+GameCtrl::GameCtrl() : m_pFont(nullptr), m_nMaxGuesses(6) {
 	std::copy(sm_DefColors, sm_DefColors + CLR_MAX, m_Colors);
 }
 
@@ -74,21 +82,21 @@ bool GameCtrl::Create(wxWindow *parent, wxWindowID winid, const wxPoint& pos, co
 	return true;
 }
 
-#include <wx/richmsgdlg.h>
-
 void GameCtrl::OnDone(const std::string& szCap, const std::string& szMesg) {
-	wxRichMessageDialog dlg(this, szMesg + "New Game?", szCap, wxYES_NO);
-	dlg.ShowCheckBox("Remove " + m_Game.Word() + " from the dictionary");
-	if(wxID_YES == dlg.ShowModal()) {
-		m_Game.Random();
-		m_szGuess.clear();
-		Update();
-	}
-	if(dlg.IsCheckBoxChecked())
+	wxMessageDialog dlg(this, szMesg + "New Game?", szCap, wxYES_NO | wxCANCEL);
+	// we're changing the labels since pressing escape is the same as cancel
+	dlg.SetYesNoCancelLabels("Yes", "Remove", "No");
+	auto n = dlg.ShowModal();
+	if(wxID_NO == n) {
+		// remove the word
 		if(m_Game.Remove(m_Game.Word())) {
 			wxBusyCursor bc;
 			m_Game.SaveWords(m_szPath.c_str());
 		}
+	}
+	if(wxID_CANCEL != n)
+		// yes or remove causes a new game (if you removed the word, you won't be able to guess it)
+		Random();
 }
 
 void GameCtrl::OnWin() {
@@ -125,7 +133,7 @@ void GameCtrl::OnChar(wxKeyEvent& e) {
 					Update(); 
 					break;
 				case Game::NOT_WORD:
-					wxMessageBox("Dumbass");
+					wxMessageBox("Dumbass", "Not a word");
 				}
 		} else if(uc == WXK_BACK) {
 			if(m_szGuess.size()) {

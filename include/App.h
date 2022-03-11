@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef _WIN32
 #define wxNEEDS_DECL_BEFORE_TEMPLATE
 #ifndef __WXMSW__

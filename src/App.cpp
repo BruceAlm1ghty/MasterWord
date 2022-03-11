@@ -42,6 +42,7 @@ bool App::OnInit() {
 #if defined(UNICODE) || defined(_UNICODE)
 #pragma comment(lib, "wxbase31ud.lib")
 #pragma comment(lib, "wxmsw31ud_core.lib")
+#pragma comment(lib, "wxbase31ud_net.lib")
 //#pragma comment(lib, "wxmsw31ud_gl.lib")
 //#pragma comment(lib, "wxregexud.lib")
 //#pragma comment(lib, "wxjpegd.lib")
@@ -56,6 +57,7 @@ bool App::OnInit() {
 
 #if defined(UNICODE) || defined(_UNICODE)
 #pragma comment(lib, "wxbase31u.lib")
+#pragma comment(lib, "wxbase31ud_net.lib")
 #pragma comment(lib, "wxjpeg.lib")
 #pragma comment(lib, "wxmsw31u_core.lib")
 #pragma comment(lib, "wxmsw31u_gl.lib")

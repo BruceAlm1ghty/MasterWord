@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Game.h"
-#include <wx/wx.h>
+#include "App.h"
 
-//! a wordle control
+//! a WORD (puzz)LE control
 struct GameCtrl : public wxWindow {
 	using this_type = GameCtrl;
 	using base_type = wxWindow;
@@ -14,12 +14,16 @@ struct GameCtrl : public wxWindow {
 	//! our default color set
 	static const wxColour sm_DefColors[CLR_MAX];
 
+	GameCtrl();
 	GameCtrl(wxWindow *parent,
 		wxWindowID winid = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize,
 		long style = 0,
-		const wxString& name = wxASCII_STR(wxPanelNameStr));
+		const wxString& name = wxASCII_STR(wxPanelNameStr)) : GameCtrl() 
+	{
+		Create(parent, winid, pos, size, style, name);
+	}
 
 	bool Create(wxWindow *parent,
 		wxWindowID winid = wxID_ANY,
@@ -34,7 +38,7 @@ struct GameCtrl : public wxWindow {
 
 	void Random(std::size_t nLen = 5) { Random(nLen, m_nMaxGuesses); }
 	void Random(std::size_t nLen, std::size_t nMaxGuesses);
-	bool Init(const std::string& sz) { return m_Game.Init(sz); }
+	bool Init(const std::string& sz);
 
 	std::size_t Length() const { return m_Game.Length(); }
 

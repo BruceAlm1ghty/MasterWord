@@ -1,6 +1,6 @@
 #include "App.h"
 #include "Frame.h"
-#include "GameCtrl.h"
+#include "CheckingGameCtrl.h"
 
 #include <wx/spinctrl.h>
 #include <wx/notebook.h>
@@ -14,6 +14,7 @@ Frame::Frame() : wxFrame(NULL, wxID_ANY, "Master Word") {
 	menuFile->Append(ID_LEN, "Word &Length...\tCtrl-L", "Change the Word Length");
 	menuFile->Append(ID_MAX, "Max &Guesses...\tCtrl-G", "Change the Maximum Guesses");
 	menuFile->Append(ID_WORD, "&Word...\tCtrl-W", "Create a Game with the given Word");
+	menuFile->Append(ID_CHECK, "&Check a word...\tCtrl-C", "Check a given Word");
 
 //    menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
  //                    "Help string shown in status bar for this menu item");
@@ -29,7 +30,7 @@ Frame::Frame() : wxFrame(NULL, wxID_ANY, "Master Word") {
     SetStatusText("Ready");
 
 	wxBoxSizer* p = new wxBoxSizer(wxVERTICAL);
-	auto pW = new GameCtrl(this);
+	auto pW = new CheckingGameCtrl(this);
 	p->Add(pW, 1, wxEXPAND);
 	SetSizerAndFit(p);
 	Bind(wxEVT_MENU, [this](wxCommandEvent& event) { 
@@ -63,6 +64,16 @@ Frame::Frame() : wxFrame(NULL, wxID_ANY, "Master Word") {
 			break;
 		case wxID_EXIT:
 			this->Close(true);
+			break;
+		case ID_CHECK:
+		{
+//			pW->CheckDictionary();
+			auto wx = wxGetTextFromUser("Enter Word", "Enter word to check");
+			if(!wx.empty())
+				pW->CheckWord(wx.ToStdString());
+		}
+		break;
+
 		}
 	});
 }
