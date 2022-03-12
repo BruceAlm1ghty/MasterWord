@@ -43,9 +43,8 @@ struct CheckingGameCtrl : public GameCtrl {
 	void CheckDictionary(std::size_t nLen = 5);
 
 	void Random(std::size_t nLen = 5) { Random(nLen, m_nMaxGuesses); }
-	void Random(std::size_t nLen, std::size_t nMaxGuesses);
+	virtual void Random(std::size_t nLen, std::size_t nMaxGuesses) override;
 	bool Init(const std::string& sz);
-
 
 protected:
 	Checker m_Checker;
@@ -53,5 +52,7 @@ protected:
 	std::size_t m_nCheckPlace;
 	std::string m_szCheck;
 	int m_nCheck;
+
+	void OnChar(wxKeyEvent&);
 };
 

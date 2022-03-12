@@ -15,6 +15,7 @@ Frame::Frame() : wxFrame(NULL, wxID_ANY, "Master Word") {
 	menuFile->Append(ID_MAX, "Max &Guesses...\tCtrl-G", "Change the Maximum Guesses");
 	menuFile->Append(ID_WORD, "&Word...\tCtrl-W", "Create a Game with the given Word");
 	menuFile->Append(ID_CHECK, "&Check a word...\tCtrl-C", "Check a given Word");
+	menuFile->Append(ID_DIC, "&Check a dictionary...\tCtrl-D", "Check a Dictionary");
 
 //    menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
  //                    "Help string shown in status bar for this menu item");
@@ -73,7 +74,12 @@ Frame::Frame() : wxFrame(NULL, wxID_ANY, "Master Word") {
 				pW->CheckWord(wx.ToStdString());
 		}
 		break;
-
+		case ID_DIC:
+		{
+			long l = wxGetNumberFromUser(wxEmptyString, "Max Guesses", "Maximum Number of Guesses", 5, 1, 99, this);
+			if(l > 0) pW->CheckDictionary(l);
+		}
+		break;
 		}
 	});
 }

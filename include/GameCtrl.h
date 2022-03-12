@@ -37,7 +37,7 @@ struct GameCtrl : public wxWindow {
 	const wxColour& Color(std::uint16_t n) const { return m_Colors[n < CLR_MAX ? n : 0]; }
 
 	void Random(std::size_t nLen = 5) { Random(nLen, m_nMaxGuesses); }
-	void Random(std::size_t nLen, std::size_t nMaxGuesses);
+	virtual void Random(std::size_t nLen, std::size_t nMaxGuesses);
 	bool Init(const std::string& sz);
 
 	std::size_t Length() const { return m_Game.Length(); }
@@ -47,6 +47,8 @@ struct GameCtrl : public wxWindow {
 
 	//! change the maximum guesses of the current game
 	void MaxGuesses(std::size_t n);
+
+	const Game& Get() const { return m_Game; }
 
 protected:
 	//! our game
