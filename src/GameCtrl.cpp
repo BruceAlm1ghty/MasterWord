@@ -5,7 +5,6 @@
 #include "GameCtrl.h"
 #include "wx/busyinfo.h"
 
-#include <filesystem>
 #include <fstream>
 #include <mutex>
 
@@ -13,6 +12,11 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 
+#ifdef __linux__
+#include <experimental/filesystem>
+#else
+#include <filesystem>
+#endif
 namespace fs = std::experimental::filesystem;
 
 //////////////////////////////////////////////////////////////////////////

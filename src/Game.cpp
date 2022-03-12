@@ -3,10 +3,15 @@
 
 #include "Game.h"
 
-#include <filesystem>
 #include <fstream>
 #include <random>
+#include <algorithm>
 
+#ifdef __linux__
+#include <experimental/filesystem>
+#else
+#include <filesystem>
+#endif
 namespace fs = std::experimental::filesystem;
 
 // Seed with a real random value, if available

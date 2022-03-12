@@ -3,6 +3,10 @@
 #include "Game.h"
 #include "App.h"
 
+#ifndef wxASCII_STR
+#define wxASCII_STR(x) x
+#endif
+
 //! a WORD (puzz)LE control
 struct GameCtrl : public wxWindow {
 	using this_type = GameCtrl;

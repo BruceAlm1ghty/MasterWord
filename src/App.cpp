@@ -16,6 +16,7 @@ bool App::OnInit() {
 	// Set the new state for the flag
 	_CrtSetDbgFlag(tmpFlag);
 #endif
+#ifdef _WIN32
 	if(false) {
 		// allocate a console
 		AllocConsole();
@@ -26,6 +27,7 @@ bool App::OnInit() {
 		std::cout.clear();
 		std::cin.clear();
 	}
+#endif
 
 	wxImage::AddHandler(new wxPNGHandler);
 
